@@ -255,6 +255,10 @@ public final class PointsToAnalyzer {
         onAnalysisExitAccess = new StandaloneAnalysisFeatureImpl.OnAnalysisExitAccessImpl(standaloneAnalysisFeatureManager, analysisClassLoader, bigbang, debugContext);
         standaloneAnalysisFeatureManager.forEachFeature(feature -> feature.onAnalysisExit(onAnalysisExitAccess));
         bigbang.getUnsupportedFeatures().report(bigbang);
+
+        System.out.println("Types : " + bigbang.getUniverse().getTypes().size());
+        System.out.println("Methods : " + bigbang.getUniverse().getMethods().size());
+
         return exitCode;
     }
 
