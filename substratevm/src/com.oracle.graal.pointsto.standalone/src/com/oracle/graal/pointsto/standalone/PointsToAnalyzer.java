@@ -36,6 +36,7 @@ import com.oracle.graal.pointsto.heap.ImageHeap;
 import com.oracle.graal.pointsto.infrastructure.SubstitutionProcessor;
 import com.oracle.graal.pointsto.meta.AnalysisMetaAccess;
 import com.oracle.graal.pointsto.meta.AnalysisMetaAccessExtensionProvider;
+import com.oracle.graal.pointsto.meta.AnalysisMethod;
 import com.oracle.graal.pointsto.meta.AnalysisUniverse;
 import com.oracle.graal.pointsto.meta.HostedProviders;
 import com.oracle.graal.pointsto.meta.PointsToAnalysisFactory;
@@ -256,8 +257,15 @@ public final class PointsToAnalyzer {
         standaloneAnalysisFeatureManager.forEachFeature(feature -> feature.onAnalysisExit(onAnalysisExitAccess));
         bigbang.getUnsupportedFeatures().report(bigbang);
 
-        System.out.println("Types : " + bigbang.getUniverse().getTypes().size());
-        System.out.println("Methods : " + bigbang.getUniverse().getMethods().size());
+        System.out.println("Reachable Types : " + bigbang.getUniverse().getTypes().stream().filter(t -> t.isReachable()).count());
+        System.out.println("Reachable Methods : " + bigbang.getUniverse().getMethods().stream().filter(m -> m.isReachable()).count());
+
+        System.out.println();
+
+        for (AnalysisMethod method :  bigbang.getUniverse().getMethods()) {
+            if (method.isReachable())
+                System.out.println(method.getDeclaringClass().toJavaName() + "." + method.getName());
+        }
 
         return exitCode;
     }
